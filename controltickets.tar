@@ -1,0 +1,517 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.3 (Ubuntu 13.3-1.pgdg18.04+1)
+-- Dumped by pg_dump version 13.3 (Ubuntu 13.3-1.pgdg18.04+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: cliente; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.cliente (
+    id_cliente character varying(16) NOT NULL,
+    nombre character varying(16),
+    apellido character varying(16),
+    "cédula" character varying(12),
+    especialidad character varying(20),
+    "teléfono" character varying(14),
+    "teléfono_alterno" character varying(14),
+    email character varying(60)
+);
+
+
+ALTER TABLE public.cliente OWNER TO postgres;
+
+--
+-- Name: consignación; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."consignación" (
+    "no_consignación" integer NOT NULL,
+    fecha date NOT NULL,
+    "entregó" character varying(20),
+    id_cliente character varying(16)
+);
+
+
+ALTER TABLE public."consignación" OWNER TO postgres;
+
+--
+-- Name: consignación_no_consignación_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."consignación_no_consignación_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."consignación_no_consignación_seq" OWNER TO postgres;
+
+--
+-- Name: consignación_no_consignación_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."consignación_no_consignación_seq" OWNED BY public."consignación"."no_consignación";
+
+
+--
+-- Name: cuentas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.cuentas (
+    id_cuenta integer NOT NULL,
+    no_cuenta character varying(40),
+    tipo_cuenta character varying(10),
+    banco character varying(18),
+    nombre character varying(15),
+    apellido character varying(15),
+    "teléfono" character varying(14),
+    email character varying(60)
+);
+
+
+ALTER TABLE public.cuentas OWNER TO postgres;
+
+--
+-- Name: cuentas_id_cuenta_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.cuentas_id_cuenta_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.cuentas_id_cuenta_seq OWNER TO postgres;
+
+--
+-- Name: cuentas_id_cuenta_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.cuentas_id_cuenta_seq OWNED BY public.cuentas.id_cuenta;
+
+
+--
+-- Name: divisiones_hechas_id_división; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."divisiones_hechas_id_división"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."divisiones_hechas_id_división" OWNER TO postgres;
+
+--
+-- Name: divisiones_hechas; Type: TABLE; Schema: public; Owner: david
+--
+
+CREATE TABLE public.divisiones_hechas (
+    "id_división" integer DEFAULT nextval('public."divisiones_hechas_id_división"'::regclass) NOT NULL,
+    fecha date,
+    punto character varying(12),
+    ref_secuencia character varying(9),
+    monto numeric(11,2),
+    id_cliente character varying(16)
+);
+
+
+ALTER TABLE public.divisiones_hechas OWNER TO david;
+
+--
+-- Name: ticket_banco1; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ticket_banco1 (
+    ref integer NOT NULL,
+    "no_consignación" integer,
+    monto numeric(11,2)
+);
+
+
+ALTER TABLE public.ticket_banco1 OWNER TO postgres;
+
+--
+-- Name: ticket_cartón_recibidos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."ticket_cartón_recibidos" (
+    "id_cartón" character varying(8) NOT NULL,
+    "no_consignación" integer,
+    monto numeric(11,2)
+);
+
+
+ALTER TABLE public."ticket_cartón_recibidos" OWNER TO postgres;
+
+--
+-- Name: tickets_cartón_emitidos; Type: TABLE; Schema: public; Owner: david
+--
+
+CREATE TABLE public."tickets_cartón_emitidos" (
+    "id_cartón" character varying(8) NOT NULL,
+    "id_división" integer,
+    monto numeric(11,2)
+);
+
+
+ALTER TABLE public."tickets_cartón_emitidos" OWNER TO david;
+
+--
+-- Name: transferencias; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.transferencias (
+    id_transferencia integer NOT NULL,
+    "no_consignación" integer,
+    monto numeric(11,2),
+    no_transferencia character varying(40),
+    id_cuenta integer
+);
+
+
+ALTER TABLE public.transferencias OWNER TO postgres;
+
+--
+-- Name: transferencias_id_transferencia_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.transferencias_id_transferencia_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.transferencias_id_transferencia_seq OWNER TO postgres;
+
+--
+-- Name: transferencias_id_transferencia_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.transferencias_id_transferencia_seq OWNED BY public.transferencias.id_transferencia;
+
+
+--
+-- Name: consignación no_consignación; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."consignación" ALTER COLUMN "no_consignación" SET DEFAULT nextval('public."consignación_no_consignación_seq"'::regclass);
+
+
+--
+-- Name: cuentas id_cuenta; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cuentas ALTER COLUMN id_cuenta SET DEFAULT nextval('public.cuentas_id_cuenta_seq'::regclass);
+
+
+--
+-- Name: transferencias id_transferencia; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.transferencias ALTER COLUMN id_transferencia SET DEFAULT nextval('public.transferencias_id_transferencia_seq'::regclass);
+
+
+--
+-- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.cliente (id_cliente, nombre, apellido, "cédula", especialidad, "teléfono", "teléfono_alterno", email) FROM stdin;
+aroldo25	Aroldo	Perez	15899784	breque	0251-231.5447	0412-345.6786	a@xx.com
+golo	david	villegas	11787464	software	0251-254.7847	0416-459.6956	sd@xx.com
+juan1	juan	villegas	17784567	cuentas	0251-254.7847	0414-445.6756	jd@xy.com
+\.
+
+
+--
+-- Data for Name: consignación; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."consignación" ("no_consignación", fecha, "entregó", id_cliente) FROM stdin;
+151	2021-06-04	chis	golo
+27	2021-03-30	checho	golo
+35	2021-03-31	checho	juan1
+36	2021-03-31	checho	juan1
+67	2021-04-02	pepo	juan1
+66	2021-04-02	pipax	juan1
+45	2021-03-31	davvv	juan1
+2	2021-03-03	carlospere	aroldo25
+1	2021-03-02	pepis	juan1
+25	2021-03-29	jkl	aroldo25
+28	2021-03-30	kako	golo
+33	2021-03-31	david	aroldo25
+3	2021-03-04	cheche	juan1
+\.
+
+
+--
+-- Data for Name: cuentas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.cuentas (id_cuenta, no_cuenta, tipo_cuenta, banco, nombre, apellido, "teléfono", email) FROM stdin;
+1	234-456-789-654	ahorro	banco1	jose	moreno	0414-456.5487	tuki@hotmail.com
+2	764-234-443-112	corriente	banco2 	antonio	ecarri	0412-769.4467	chac@yahoo.com
+\.
+
+
+--
+-- Data for Name: divisiones_hechas; Type: TABLE DATA; Schema: public; Owner: david
+--
+
+COPY public.divisiones_hechas ("id_división", fecha, punto, ref_secuencia, monto, id_cliente) FROM stdin;
+3	2021-03-02	banco2 	101	54000.00	aroldo25
+2	2021-03-02	banco2 	100	40000.00	golo
+4	2021-05-26	banco1	102	15000.00	golo
+5	2021-05-28	banco1	103	6620.00	aroldo25
+6	2021-05-28	banco1	104	11300.00	juan1
+\.
+
+
+--
+-- Data for Name: ticket_banco1; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.ticket_banco1 (ref, "no_consignación", monto) FROM stdin;
+1	3	25000.00
+9	25	1500.00
+8	25	10000.00
+11	27	500.00
+10	27	1200.00
+12	28	5000.00
+13	33	1000.00
+17	67	3500.00
+16	66	20000.00
+15	66	23000.00
+14	45	5830.00
+5	2	12500.00
+3	2	1000.00
+7	1	15000.00
+2	1	5300.00
+21	1	15000.00
+\.
+
+
+--
+-- Data for Name: ticket_cartón_recibidos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ticket_cartón_recibidos" ("id_cartón", "no_consignación", monto) FROM stdin;
+101a	3	28300.00
+100c	2	12000.00
+102b	27	3500.00
+102a	27	2500.00
+102c	28	9000.00
+103a	33	520.00
+104a	67	8000.00
+103c	66	3000.00
+103b	45	3100.00
+101c	1	22000.00
+100a	1	21000.00
+100b	2	15000.00
+104b	151	2800.00
+\.
+
+
+--
+-- Data for Name: tickets_cartón_emitidos; Type: TABLE DATA; Schema: public; Owner: david
+--
+
+COPY public."tickets_cartón_emitidos" ("id_cartón", "id_división", monto) FROM stdin;
+101a	3	28300.00
+101b	3	11200.00
+101c	3	22000.00
+100a	2	22000.00
+100b	2	18000.00
+102a	4	2500.00
+102b	4	3500.00
+102c	4	9000.00
+103c	5	3000.00
+103a	5	520.00
+103b	5	3100.00
+104a	6	9000.00
+104b	6	2800.00
+104c	6	2500.00
+\.
+
+
+--
+-- Data for Name: transferencias; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.transferencias (id_transferencia, "no_consignación", monto, no_transferencia, id_cuenta) FROM stdin;
+\.
+
+
+--
+-- Name: consignación_no_consignación_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."consignación_no_consignación_seq"', 151, true);
+
+
+--
+-- Name: cuentas_id_cuenta_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.cuentas_id_cuenta_seq', 2, true);
+
+
+--
+-- Name: divisiones_hechas_id_división; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."divisiones_hechas_id_división"', 6, true);
+
+
+--
+-- Name: transferencias_id_transferencia_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.transferencias_id_transferencia_seq', 1, false);
+
+
+--
+-- Name: cliente cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cliente
+    ADD CONSTRAINT cliente_pkey PRIMARY KEY (id_cliente);
+
+
+--
+-- Name: consignación consignación_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."consignación"
+    ADD CONSTRAINT "consignación_pkey" PRIMARY KEY ("no_consignación");
+
+
+--
+-- Name: cuentas cuentas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cuentas
+    ADD CONSTRAINT cuentas_pkey PRIMARY KEY (id_cuenta);
+
+
+--
+-- Name: divisiones_hechas divisiones_hechas_pkey; Type: CONSTRAINT; Schema: public; Owner: david
+--
+
+ALTER TABLE ONLY public.divisiones_hechas
+    ADD CONSTRAINT divisiones_hechas_pkey PRIMARY KEY ("id_división");
+
+
+--
+-- Name: ticket_banco1 ticket_banco1_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ticket_banco1
+    ADD CONSTRAINT ticket_banco1_pkey PRIMARY KEY (ref);
+
+
+--
+-- Name: ticket_cartón_recibidos ticket_cartón_recibidos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ticket_cartón_recibidos"
+    ADD CONSTRAINT "ticket_cartón_recibidos_pkey" PRIMARY KEY ("id_cartón");
+
+
+--
+-- Name: tickets_cartón_emitidos tickets_cartón_emitidos_pkey; Type: CONSTRAINT; Schema: public; Owner: david
+--
+
+ALTER TABLE ONLY public."tickets_cartón_emitidos"
+    ADD CONSTRAINT "tickets_cartón_emitidos_pkey" PRIMARY KEY ("id_cartón");
+
+
+--
+-- Name: transferencias transferencias_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.transferencias
+    ADD CONSTRAINT transferencias_pkey PRIMARY KEY (id_transferencia);
+
+
+--
+-- Name: consignación clavextocliente; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."consignación"
+    ADD CONSTRAINT clavextocliente FOREIGN KEY (id_cliente) REFERENCES public.cliente(id_cliente) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: ticket_banco1 clavextoconsignación; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ticket_banco1
+    ADD CONSTRAINT "clavextoconsignación" FOREIGN KEY ("no_consignación") REFERENCES public."consignación"("no_consignación") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: transferencias fk_consignación; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.transferencias
+    ADD CONSTRAINT "fk_consignación" FOREIGN KEY ("no_consignación") REFERENCES public."consignación"("no_consignación") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: ticket_cartón_recibidos fk_consignación2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ticket_cartón_recibidos"
+    ADD CONSTRAINT "fk_consignación2" FOREIGN KEY ("no_consignación") REFERENCES public."consignación"("no_consignación") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: transferencias fk_cuentas; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.transferencias
+    ADD CONSTRAINT fk_cuentas FOREIGN KEY (id_cuenta) REFERENCES public.cuentas(id_cuenta) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: tickets_cartón_emitidos tickets_cartón_emitidos_id_división_fkey; Type: FK CONSTRAINT; Schema: public; Owner: david
+--
+
+ALTER TABLE ONLY public."tickets_cartón_emitidos"
+    ADD CONSTRAINT "tickets_cartón_emitidos_id_división_fkey" FOREIGN KEY ("id_división") REFERENCES public.divisiones_hechas("id_división") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

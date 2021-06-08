@@ -125,8 +125,8 @@ def DLookUp(argConex, imagen, enLaTabla, dominio, valorEspecíficoEnDominio):
     try:
         cursorBusqueda = argConex.cursor() 
         cursorBusqueda.execute(sql.SQL("select {} from {} where {} = %s").format(sql.SQL(imagen), sql.SQL(enLaTabla), sql.SQL(dominio)), (valorEspecíficoEnDominio,))
-        #Atención: en una composición de cadena sql, format() tratará solamente las composiciones sql.SQL(), de modo que ellas deben estar dentro de su paréntesis. Fijese que valorEspecíficoEnDominio es un "literal" en cuanto a 
-        #composición de cadenas sql, es po ello que está fuera del format, y debe ponerse en forma de tupla monomia.
+        #Atención: en una composición de cadena sql, format() tratará solamente las composiciones sql.SQL(), de modo que ellas deben estar dentro de sus paréntesis. Fijese que valorEspecíficoEnDominio es un "literal" en cuanto a 
+        #composición de cadenas sql, es por ello que está fuera del format, y debe ponerse en forma de tupla monomia para este case de un sólo valor.
         #Ojo: un select que no encuentra nada y mete su resultado en un fetchone, no lo retorna dentro de una tupla de la forma (None,), como se esperaría, 
         # sino que retorna un None a secas. De tal manera que la expresión cursorBusqueda.fetchone()[0] en caso que no se encuentre ningún valor, 
         # arrojará indefectiblemente el error: 'noneType' object is not subscriptable, puesto que no se puede hacer tal cosa como None[0] (buscar indice en un objeto None).

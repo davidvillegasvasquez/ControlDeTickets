@@ -475,7 +475,7 @@ try:
 
         #Definimos lo métodos de actualización e inserción:
         def Actualizar(self, *args):
-            "Na guevona, duré una semana atascado aquí para darme cuenta que tenía que hacer esta definición de método a parte, puesto que estaba usando este método como implementación lambda dentro del método BotónPulsado, y claro, me volvía a poner en la variable de control self.entregó, el valor original que está en la base de datos, puesto que cada vez que se invoca, resulConsigna allá arriba se vuelve a llenar con los valores que están establecidos en la base de datos, y los nuevo en los txtBoxEntregó y txtBoxFecha son volados por estos. Mierda!!!!"
+            "Duré una semana atascado aquí para darme cuenta que tenía que hacer esta definición de método a parte, puesto que estaba usando este método como implementación lambda dentro del método BotónPulsado, y claro, me volvía a poner en la variable de control self.entregó, el valor original que está en la base de datos, puesto que cada vez que se invoca, resulConsigna allá arriba se vuelve a llenar con los valores que están establecidos en la base de datos, y los nuevo en los txtBoxEntregó y txtBoxFecha son volados por estos."
             #self.tipoDeOperación = "actualizar"
             self.Operación()
             self.DeshabilitarWidgets()

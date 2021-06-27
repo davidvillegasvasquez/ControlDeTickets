@@ -1,7 +1,8 @@
 """Interfaz gráfica para la base de datos controltickets. 
         Versión:040621 con respecto a la primera versión:140321.
 260521E-1: fue la primera versión encapsulada básica totalmente funcional minimamente.
-020621: presenta por primera vez una función dlookup totalmente completa, no parcial."""
+020621: presenta por primera vez una función dlookup totalmente completa, no parcial.
+270621: prueba con git-github"""
 
 import psycopg2
 from datetime import datetime

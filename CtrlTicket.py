@@ -15,8 +15,7 @@ conexión = None
 
 try:
     raíz = Tk()
-    conexión = psycopg2.connect(
-        host="localhost", database="controltickets", user="david", password="1234")
+    conexión = psycopg2.connect(**infoConex)
 
     class GeometríaBase:
         "Haremos la clase plantilla, con los atributos comunes a las instancias."
